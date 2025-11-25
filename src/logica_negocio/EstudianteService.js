@@ -1,8 +1,9 @@
 import { Estudiante } from "../datos/model/Estudiante.js";
+import { EstudianteRepository } from "../datos/repository/EstudianteRepository.js";
 
 export class EstudianteService {
-  constructor(repository) {
-    this.repository = repository;
+  constructor() {
+    this.repository = EstudianteRepository.getInstance();
   }
 
   crearEstudiante(datos) {
