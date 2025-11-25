@@ -1,8 +1,19 @@
 export class EstudianteRepository {
   constructor() {
+        // Si ya existe una instancia, la devolvemos (asegurando Singleton)
+    if (EstudianteRepository.instance) {
+      return EstudianteRepository.instance;
+    }
+        
     this.estudiantes = [];
+    EstudianteRepository.instance = this;
   }
-
+  static getInstance() {
+    if (!EstudianteRepository.instance) {
+      EstudianteRepository.instance = new EstudianteRepository();
+    }
+    return EstudianteRepository.instance;
+  }
   agregar(estudiante) {
     this.estudiantes.push(estudiante);
   }
@@ -10,14 +21,13 @@ export class EstudianteRepository {
   editar(id, nuevosDatos) {
     const index = this.estudiantes.findIndex(e => e.id === id);
     if (index === -1) return false;
-
     this.estudiantes[index] = { ...this.estudiantes[index], ...nuevosDatos };
     return true;
   }
 
   eliminar(id) {
-    const originalLength = this.estudiantes.length;
-    this.estudiantes = this.estudiantes.filter(e => e.id !== id);
+      const originalLength = this.estudiantes.length;
+      this.estudiantes = this.estudiantes.filter(e => e.id !== id);
     return this.estudiantes.length < originalLength;
   }
 

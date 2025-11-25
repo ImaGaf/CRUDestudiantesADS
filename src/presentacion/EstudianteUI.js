@@ -4,7 +4,7 @@ import { EstudianteService } from "../logica_negocio/EstudianteService.js";
 export class EstudianteUI {
 
   constructor() {
-    this.repo = new EstudianteRepository();
+    this.repo = EstudianteRepository.getInstance();
     this.service = new EstudianteService(this.repo);
 
     this.btnGuardar = document.getElementById("btnGuardar");
