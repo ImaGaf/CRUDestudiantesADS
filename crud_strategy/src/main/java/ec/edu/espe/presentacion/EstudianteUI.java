@@ -194,8 +194,17 @@ public class EstudianteUI extends JFrame {
             fireEditingStopped();
 
             String id = (String) table.getValueAt(filaActual, 0);
-            controller.eliminar(id);
-            mostrarTabla();
+
+            int confirm = JOptionPane.showConfirmDialog(
+                    null,
+                    "¿Estás seguro de que deseas eliminar al estudiante con ID: " + id + "?",
+                    "Confirmar eliminación",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                controller.eliminar(id);
+                mostrarTabla();
+            }
         }
 
         @Override
