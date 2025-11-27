@@ -3,6 +3,9 @@ package ec.edu.espe.presentacion;
 import ec.edu.espe.controller.EstudianteController;
 import ec.edu.espe.logica_negocio.EstudianteService;
 import ec.edu.espe.datos.model.Estudiante;
+import ec.edu.espe.logica_negocio.strategy.SortByIdStrategy;
+import ec.edu.espe.logica_negocio.strategy.SortByNameStrategy;
+import ec.edu.espe.logica_negocio.strategy.SortByAgeStrategy;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -24,30 +27,52 @@ public class EstudianteUI extends JFrame {
         controller = new EstudianteController(new EstudianteService());
 
         setTitle("Gestión de Estudiantes");
-        setSize(700, 450);
+        setSize(700, 500); // Increased height for the new panel
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        JPanel form = new JPanel(new GridLayout(4, 2));
+        // --- contenedor superior (formulario + selector de estrategia) ---
+        JPanel topContainer = new JPanel();
+        topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
 
+        JPanel form = new JPanel(new GridLayout(4, 2));
         form.add(new JLabel("ID:"));
         txtId = new JTextField();
         form.add(txtId);
-
         form.add(new JLabel("Nombres:"));
         txtNombres = new JTextField();
         form.add(txtNombres);
-
         form.add(new JLabel("Edad:"));
         txtEdad = new JTextField();
         form.add(txtEdad);
-
         JButton btnGuardar = new JButton("Guardar");
         btnGuardar.addActionListener(e -> guardar());
         form.add(btnGuardar);
+        topContainer.add(form);
 
-        add(form, BorderLayout.NORTH);
+        // selector de estrategia
+        JPanel sortPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        sortPanel.add(new JLabel("Ordenar por (Patrón Strategy):"));
+        JComboBox<String> cmbSort = new JComboBox<>(new String[] { "ID", "Nombres", "Edad" });
+        cmbSort.addActionListener(e -> {
+            String selected = (String) cmbSort.getSelectedItem();
+            // cambiando la estrategia en tiempo de ejecución
+            if ("ID".equals(selected)) {
+                controller.setSortingStrategy(new SortByIdStrategy());
+            } else if ("Nombres".equals(selected)) {
+                controller.setSortingStrategy(new SortByNameStrategy());
+            } else if ("Edad".equals(selected)) {
+                controller.setSortingStrategy(new SortByAgeStrategy());
+            }
+            mostrarTabla(); // actualizar lista con nueva estrategia
+        });
+        sortPanel.add(cmbSort);
+        topContainer.add(sortPanel);
 
+        add(topContainer, BorderLayout.NORTH);
+        // ------------------------------------------------
+
+        // --- configuración de tabla ---
         model = new DefaultTableModel(new String[] { "ID", "Nombres", "Edad", "Acciones" }, 0);
         table = new JTable(model);
 
@@ -60,6 +85,7 @@ public class EstudianteUI extends JFrame {
         table.getColumn("Acciones").setCellEditor(new ButtonEditor());
 
         add(new JScrollPane(table), BorderLayout.CENTER);
+        // -------------------
 
         mostrarTabla();
         setVisible(true);

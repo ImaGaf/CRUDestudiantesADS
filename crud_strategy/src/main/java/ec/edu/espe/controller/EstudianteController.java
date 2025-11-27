@@ -1,6 +1,7 @@
 package ec.edu.espe.controller;
 
 import ec.edu.espe.logica_negocio.EstudianteService;
+import ec.edu.espe.logica_negocio.strategy.SortingStrategy;
 import ec.edu.espe.datos.model.Estudiante;
 import java.util.List;
 
@@ -10,6 +11,12 @@ public class EstudianteController {
 
     public EstudianteController(EstudianteService service) {
         this.service = service;
+    }
+
+    // patrón strategy: permite cambiar el algoritmo de ordenamiento en tiempo de
+    // ejecución
+    public void setSortingStrategy(SortingStrategy<Estudiante> strategy) {
+        service.setSortingStrategy(strategy);
     }
 
     public Estudiante crearEstudiante(String id, String nombres, int edad) {
