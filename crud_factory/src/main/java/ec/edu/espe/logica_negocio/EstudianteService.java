@@ -1,14 +1,18 @@
 package ec.edu.espe.logica_negocio;
 
+import ec.edu.espe.datos.factory.EstudianteFactory;
+import ec.edu.espe.datos.factory.EstudianteFactoryImpl;
 import ec.edu.espe.datos.model.Estudiante;
 import ec.edu.espe.datos.repository.EstudianteRepository;
 
 public class EstudianteService {
 
     private EstudianteRepository repository;
+    private EstudianteFactory factory;
 
     public EstudianteService() {
-        this.repository = EstudianteRepository.getInstance();
+        this.repository = new EstudianteRepository();
+        this.factory = new EstudianteFactoryImpl();  // ← USANDO FACTORY
     }
 
     public Estudiante crearEstudiante(String id, String nombres, int edad) {
@@ -16,7 +20,7 @@ public class EstudianteService {
             throw new IllegalArgumentException("El ID ya existe");
         }
 
-        Estudiante est = Estudiante.crear(id, nombres, edad);
+        Estudiante est = factory.crearEstudiante(id, nombres, edad);
         repository.agregar(est);
         return est;
     }
@@ -42,5 +46,4 @@ public class EstudianteService {
     public Estudiante buscarPorId(String id) {
         return repository.buscarPorId(id);
     }
-    
 }

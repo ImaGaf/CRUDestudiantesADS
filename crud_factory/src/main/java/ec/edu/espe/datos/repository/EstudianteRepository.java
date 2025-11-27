@@ -10,7 +10,7 @@ public class EstudianteRepository {
 
     private List<Estudiante> estudiantes;
 
-    private EstudianteRepository() {
+    public EstudianteRepository() {
         estudiantes = new ArrayList<>();
     }
 

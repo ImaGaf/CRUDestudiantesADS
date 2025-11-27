@@ -6,19 +6,10 @@ import java.util.List;
 
 public class EstudianteRepository {
 
-    private static EstudianteRepository instance;
-
     private List<Estudiante> estudiantes;
 
-    private EstudianteRepository() {
+    public EstudianteRepository() {
         estudiantes = new ArrayList<>();
-    }
-
-    public static EstudianteRepository getInstance() {
-        if (instance == null) {
-            instance = new EstudianteRepository();
-        }
-        return instance;
     }
 
     public void agregar(Estudiante estudiante) {

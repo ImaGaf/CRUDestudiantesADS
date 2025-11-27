@@ -8,7 +8,7 @@ public class EstudianteService {
     private EstudianteRepository repository;
 
     public EstudianteService() {
-        this.repository = EstudianteRepository.getInstance();
+        this.repository = new EstudianteRepository();
     }
 
     public Estudiante crearEstudiante(String id, String nombres, int edad) {
@@ -42,5 +42,4 @@ public class EstudianteService {
     public Estudiante buscarPorId(String id) {
         return repository.buscarPorId(id);
     }
-    
 }
