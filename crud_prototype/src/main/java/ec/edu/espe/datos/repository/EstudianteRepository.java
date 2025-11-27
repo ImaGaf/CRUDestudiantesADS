@@ -6,46 +6,30 @@ import java.util.List;
 
 public class EstudianteRepository {
 
-    private static EstudianteRepository instance;
+    private List<Estudiante> bd = new ArrayList<>();
 
-    private List<Estudiante> estudiantes;
-
-    private EstudianteRepository() {
-        estudiantes = new ArrayList<>();
+    public void agregar(Estudiante e) {
+        bd.add(e);
     }
 
-    public static EstudianteRepository getInstance() {
-        if (instance == null) {
-            instance = new EstudianteRepository();
-        }
-        return instance;
-    }
-
-    public void agregar(Estudiante estudiante) {
-        estudiantes.add(estudiante);
-    }
-
-    public boolean editar(String id, String nombres, int edad) {
-        Estudiante est = buscarPorId(id);
-        if (est == null) return false;
-
-        est.setNombres(nombres);
-        est.setEdad(edad);
-        return true;
+    public List<Estudiante> obtenerTodos() {
+        return bd;
     }
 
     public boolean eliminar(String id) {
-        return estudiantes.removeIf(e -> e.getId().equals(id));
+        return bd.removeIf(e -> e.getId().equals(id));
     }
 
-    public List<Estudiante> listar() {
-        return estudiantes;
+    public Estudiante buscar(String id) {
+        return bd.stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null);
     }
 
-    public Estudiante buscarPorId(String id) {
-        return estudiantes.stream()
-                .filter(e -> e.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+    public void actualizar(Estudiante actualizado) {
+        for (int i = 0; i < bd.size(); i++) {
+            if (bd.get(i).getId().equals(actualizado.getId())) {
+                bd.set(i, actualizado);
+                break;
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
 package ec.edu.espe.datos.model;
 
-public class Estudiante {
+public class Estudiante implements Cloneable {
     private String id;
     private String nombres;
     private int edad;
@@ -18,23 +18,24 @@ public class Estudiante {
         return new Estudiante(id, nombres, edad);
     }
 
-    public String getId() {
-        return id;
+    @Override
+    public Estudiante clone() {
+        try {
+            return (Estudiante) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Error al clonar estudiante", e);
+        }
     }
 
-    public String getNombres() {
-        return nombres;
-    }
+    public String getId() { return id; }
+    public String getNombres() { return nombres; }
+    public int getEdad() { return edad; }
 
-    public int getEdad() {
-        return edad;
-    }
+    public void setNombres(String nombres) { this.nombres = nombres; }
+    public void setEdad(int edad) { this.edad = edad; }
 
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
-    }
-
-    public void setEdad(int edad) {
-        this.edad = edad;
+    @Override
+    public String toString() {
+        return "Estudiante{id='" + id + "', nombres='" + nombres + "', edad=" + edad + "}";
     }
 }
