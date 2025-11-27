@@ -3,44 +3,49 @@ package ec.edu.espe.logica_negocio;
 import ec.edu.espe.datos.model.Estudiante;
 import ec.edu.espe.datos.repository.EstudianteRepository;
 
+import java.util.List;
+
 public class EstudianteService {
 
-    private EstudianteRepository repository;
+    private EstudianteRepository repo;
 
     public EstudianteService() {
-        this.repository = EstudianteRepository.getInstance();
+        this.repo = new EstudianteRepository();
     }
 
     public Estudiante crearEstudiante(String id, String nombres, int edad) {
-        if (repository.buscarPorId(id) != null) {
-            throw new IllegalArgumentException("El ID ya existe");
-        }
-
-        Estudiante est = Estudiante.crear(id, nombres, edad);
-        repository.agregar(est);
-        return est;
+        Estudiante nuevo = Estudiante.crear(id, nombres, edad);
+        repo.agregar(nuevo);
+        return nuevo;
     }
 
-    public boolean editarEstudiante(String id, String nombres, int edad) {
-        if (repository.buscarPorId(id) == null) {
-            throw new IllegalArgumentException("Estudiante no encontrado");
-        }
-        return repository.editar(id, nombres, edad);
+    public List<Estudiante> listarEstudiantes() {
+        return repo.obtenerTodos();
     }
 
     public boolean eliminarEstudiante(String id) {
-        if (repository.buscarPorId(id) == null) {
-            throw new IllegalArgumentException("Estudiante no encontrado");
-        }
-        return repository.eliminar(id);
-    }
-
-    public java.util.List<Estudiante> listarEstudiantes() {
-        return repository.listar();
+        return repo.eliminar(id);
     }
 
     public Estudiante buscarPorId(String id) {
-        return repository.buscarPorId(id);
+        return repo.buscar(id);
     }
-    
+
+    public boolean editarEstudiante(String id, String nombres, int edad) {
+
+        Estudiante original = repo.buscar(id);
+        if (original == null) {
+            throw new RuntimeException("Estudiante no encontrado");
+        }
+
+        //PROTOTYPE
+        Estudiante copia = original.clone();
+
+        original.setNombres(nombres);
+        original.setEdad(edad);
+
+        repo.actualizar(original);
+
+        return true;
+    }
 }
