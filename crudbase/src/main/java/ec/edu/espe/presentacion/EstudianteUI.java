@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class EstudianteUI extends JFrame {
 
@@ -36,10 +38,28 @@ public class EstudianteUI extends JFrame {
 
         form.add(new JLabel("Nombres:"));
         txtNombres = new JTextField();
+        txtNombres.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isLetter(c) && !Character.isSpaceChar(c)) {
+                    e.consume();
+                }
+            }
+        });
         form.add(txtNombres);
 
         form.add(new JLabel("Edad:"));
         txtEdad = new JTextField();
+        txtEdad.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c)) {
+                    e.consume();
+                }
+            }
+        });
         form.add(txtEdad);
 
         JButton btnGuardar = new JButton("Guardar");
@@ -67,15 +87,28 @@ public class EstudianteUI extends JFrame {
 
     private void guardar() {
         try {
-            String id = txtId.getText();
-            String nombres = txtNombres.getText();
-            int edad = Integer.parseInt(txtEdad.getText());
+            String id = txtId.getText().trim();
+            String nombres = txtNombres.getText().trim();
+            String edadStr = txtEdad.getText().trim();
+
+            if (id.isEmpty() || nombres.isEmpty() || edadStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios");
+                return;
+            }
+
+            int edad = Integer.parseInt(edadStr);
+            if (edad <= 0 || edad > 100) {
+                JOptionPane.showMessageDialog(this, "La edad debe ser positiva y no mayor a 100");
+                return;
+            }
 
             if (modo.equals("crear")) {
                 controller.crearEstudiante(id, nombres, edad);
+                System.out.println("[crudbase]--->estudiante creado: " + nombres);
                 JOptionPane.showMessageDialog(this, "Estudiante agregado");
             } else {
                 controller.editar(idEditando, nombres, edad);
+                System.out.println("[crudbase]--->estudiante actualizado: " + nombres);
                 JOptionPane.showMessageDialog(this, "Estudiante actualizado");
                 modo = "crear";
                 txtId.setEnabled(true);
@@ -169,6 +202,7 @@ public class EstudianteUI extends JFrame {
 
             String id = (String) table.getValueAt(filaActual, 0);
             controller.eliminar(id);
+            System.out.println("[crudbase]--->estudiante eliminado: " + id);
             mostrarTabla();
         }
 

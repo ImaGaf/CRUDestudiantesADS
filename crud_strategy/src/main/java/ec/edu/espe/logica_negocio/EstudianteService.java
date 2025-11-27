@@ -45,7 +45,7 @@ public class EstudianteService {
     }
 
     public java.util.List<Estudiante> listarEstudiantes() {
-        // aplicar patrón strategy aquí
+        // aplicando el patrón strategy
         // el servicio delega el algoritmo de ordenamiento al objeto estrategia
         return sortingStrategy.ordenar(repository.listar());
     }
