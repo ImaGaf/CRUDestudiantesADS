@@ -41,8 +41,6 @@ public class EstudianteService {
         if (repository.buscarPorId(id) == null) {
             throw new IllegalArgumentException("Estudiante no encontrado");
         }
-     
-
 
     public java.util.List<Estudiante> listarEstudiantes() {
         // aplicar patrón strategy aquí

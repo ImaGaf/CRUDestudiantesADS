@@ -67,11 +67,38 @@ public class EstudianteUI extends JFrame {
 
     private void guardar() {
         try {
-            String id = txtId.getText();
-            String nombres = txtNombres.getText();
-            int edad = Integer.parseInt(txtEdad.getText());
+            String id = txtId.getText().trim();
+            String nombres = txtNombres.getText().trim();
+            String edadStr = txtEdad.getText().trim();
+
+            if (id.isEmpty()) {
+                throw new IllegalArgumentException("El ID no puede estar vacío");
+            }
+
+            if (nombres.isEmpty()) {
+                throw new IllegalArgumentException("El nombre no puede estar vacío");
+            }
+            if (nombres.matches(".*\\d.*")) { // contiene algún número
+                throw new IllegalArgumentException("El nombre no puede contener números");
+            }
+
+            if (edadStr.isEmpty()) {
+                throw new IllegalArgumentException("La edad no puede estar vacía");
+            }
+            int edad;
+            try {
+                edad = Integer.parseInt(edadStr);
+            } catch (NumberFormatException ex) {
+                throw new IllegalArgumentException("La edad debe ser un número entero");
+            }
+            if (edad <= 0) {
+                throw new IllegalArgumentException("La edad debe ser mayor a cero");
+            }
 
             if (modo.equals("crear")) {
+                if (controller.buscar(id) != null) {
+                    throw new IllegalArgumentException("Ya existe un estudiante con este ID");
+                }
                 controller.crearEstudiante(id, nombres, edad);
                 JOptionPane.showMessageDialog(this, "Estudiante agregado");
             } else {
@@ -85,7 +112,7 @@ public class EstudianteUI extends JFrame {
             mostrarTabla();
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

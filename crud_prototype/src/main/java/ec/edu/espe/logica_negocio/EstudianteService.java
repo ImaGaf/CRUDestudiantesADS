@@ -2,7 +2,6 @@ package ec.edu.espe.logica_negocio;
 
 import ec.edu.espe.datos.model.Estudiante;
 import ec.edu.espe.datos.repository.EstudianteRepository;
-
 import java.util.List;
 
 public class EstudianteService {
@@ -38,13 +37,21 @@ public class EstudianteService {
             throw new RuntimeException("Estudiante no encontrado");
         }
 
-        //PROTOTYPE
+        // === PROTOTYPE ===
         Estudiante copia = original.clone();
+
+        System.out.println("=== Copia antes de editar ===");
+        System.out.println(copia);
 
         original.setNombres(nombres);
         original.setEdad(edad);
-
         repo.actualizar(original);
+
+        System.out.println("=== Copia después de editar (se mantiene igual) ===");
+        System.out.println(copia);
+
+        System.out.println("=== Original actualizado ===");
+        System.out.println(original);
 
         return true;
     }
